@@ -7,6 +7,7 @@ class Route {
     constructor() {
         this.routes.post('/login', AuthController.login);
         this.routes.post('/create', AuthController.signup);
+        this.routes.post('/forgoepassword', AuthController.forgotPassword)
     }
 }
 

@@ -13,9 +13,13 @@ import { AppError } from './utils';
 
 class App {
     app: Express.Application = Express();
+    corsOptions: Cors.CorsOptions = {
+        credentials: true,
+        origin: 'http://localhost:4400'
+    };
     constructor() {
         this.app.enable('trust proxy');
-        this.app.use(Cors());
+        this.app.use(Cors(this.corsOptions));
         this.app.use(Helmet());
         this.app.use(Morgan('combined'));
         this.app.use(xss_clean());

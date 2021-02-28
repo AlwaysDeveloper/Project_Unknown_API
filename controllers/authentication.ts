@@ -1,6 +1,6 @@
 import { helperfactory, authUtil, AppError } from './../utils';
 
-import { User } from './../models';
+import { Email, User } from './../models';
 import { UserModel } from './../models';
 import { RequestHandler } from 'express';
 
@@ -21,7 +21,11 @@ class Authentication{
             const cookieOptions = authUtil.cookieOptions(req, res);
             res.cookie('jwt', token, cookieOptions).status(200).json({
                 status: "success",
-                token,
+                token: {
+                    name: 'jwt',
+                    token,
+                    options: cookieOptions
+                },
                 user
             });
         }
@@ -44,6 +48,26 @@ class Authentication{
                     });
                 }
             );
+        }
+    );
+
+    forgotPassword: RequestHandler = helperfactory.catchAsync( 
+        async (req: any, res: any, next: Function) => {
+            const { email } = req.body;
+            const user = await User.findOne({email}).select(['-__v','-photo', '-fullname', '-dob', '-address', '-usertype', '-department']);
+            console.log(user === null)
+            if(!user || user=== null)return next(new AppError('User does not exist', 400));
+            const mailOptions = {
+                to: [user?._id],
+                subject: 'Reset Password',
+                template: 'reset_password',
+                token : authUtil.signToken(user?._id),
+                priority: 'important'
+            };
+            Email.create(mailOptions);
+            res.status(200).json({
+                status: 'email send'
+            });
         }
     );
 }
