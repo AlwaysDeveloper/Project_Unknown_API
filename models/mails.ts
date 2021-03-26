@@ -27,9 +27,13 @@ const mailschema: Mongoose.Schema = new Mongoose.Schema({
     },
     priority:{
         type: String,
-        enum: ['low', 'mid', 'high', 'important'],
-        default: 'important',
+        enum: [0, 1, 2, 3],
+        default: 3,
         required: [true, 'should have priority']
+    },
+    isSend:{
+        type: Boolean,
+        default: false
     }
 });
 
