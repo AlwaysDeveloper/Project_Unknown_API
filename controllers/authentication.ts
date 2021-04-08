@@ -3,6 +3,7 @@ import { helperfactory, authUtil, AppError } from './../utils';
 import { Email, User } from './../models';
 import { UserModel } from './../models';
 import { RequestHandler } from 'express';
+import { ForgotPasswordContent } from '../models/datamodels';
 
 class Authentication{
     login: RequestHandler = helperfactory.catchAsync(
@@ -33,8 +34,8 @@ class Authentication{
 
     signup: RequestHandler = helperfactory.catchAsync(
         async (req: any, res: any, next: Function) => {
-            if(!req.body.confirmPassword || (req.body.confirmPassword !== req.body.password)) return next( new AppError("password and confrim-password does not match", 401) );
-            else if(!req.body.password.match('\^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8}')) return next( new AppError("password not secure", 401) );
+            // if(!req.body.confirmPassword || (req.body.confirmPassword !== req.body.password)) return next( new AppError("password and confrim-password does not match", 401) );
+            // else if(!req.body.password.match('\^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8}')) return next( new AppError("password not secure", 401) );
             
             const newUser = new UserModel(req.body, true);
             await User.create(newUser).then(
@@ -54,15 +55,15 @@ class Authentication{
     forgotPassword: RequestHandler = helperfactory.catchAsync( 
         async (req: any, res: any, next: Function) => {
             const { email } = req.body;
-            const user = await User.findOne({email}).select(['-__v','-photo', '-fullname', '-dob', '-address', '-usertype', '-department']);
-            console.log(user === null)
+            const user = await User.findOne({email}).select(['-__v','-photo', '-dob', '-address', '-usertype', '-department']);
             if(!user || user=== null)return next(new AppError('User does not exist', 400));
+            const action_url = `http://app.unknown.local/resetpassword/${authUtil.signToken(user?._id)}`
             const mailOptions = {
                 to: [user?._id],
                 subject: 'Reset Password',
                 template: 'reset_password',
                 token : authUtil.signToken(user?._id),
-                priority: 'important'
+                priority: 3
             };
             Email.create(mailOptions);
             res.status(200).json({

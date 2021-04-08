@@ -32,6 +32,7 @@ class UserModel implements IUserDateModel{
     dateOfEnd!: Date;
     dateOfPasswordChange!: Date;
     [key: string]: any;
+    
     constructor(user: any, hash: boolean = false){
         for(let key in user){
             this[key] = user[key];

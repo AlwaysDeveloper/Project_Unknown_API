@@ -31,6 +31,10 @@ const mailschema: Mongoose.Schema = new Mongoose.Schema({
         default: 3,
         required: [true, 'should have priority']
     },
+    content:{
+        type: Object,
+        require: [true, 'without data email make no sence']
+    },
     isSend:{
         type: Boolean,
         default: false
