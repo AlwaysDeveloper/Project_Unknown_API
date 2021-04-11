@@ -67,7 +67,7 @@ const userschema: Mongoose.Schema = new Mongoose.Schema({
     unique: {
         type: String,
         unique: [true],
-        required: [true, 'alread exist please chose diffrent']
+        required: [true, 'already exist please chose diffrent']
     },
     email:{
         type: String,
