@@ -13,8 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/request": "^2.48.5",
-    "@types/socket.io-client": "^1.4.35",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
@@ -30,12 +28,16 @@
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.17",
     "path": "^0.12.7",
+    "redis": "^3.1.0",
     "socket.io": "^3.0.4",
     "socket.io-client": "^3.1.0",
     "validator": "^13.5.2",
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
+    "@types/redis": "^2.8.28",
+    "@types/request": "^2.48.5",
+    "@types/socket.io-client": "^1.4.35",
     "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.19.0",
     "@types/btoa": "^1.2.3",
