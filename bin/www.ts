@@ -17,8 +17,8 @@ class Server{
     port: Number = process.env.PORT ? parseInt(process.env.PORT) : 3500;
     mongo_link: string = process.env.MONGODB_LOCAL ? process.env.MONGODB_LOCAL : '';
     server: Http.Server = Http.createServer(this.app);
+    date: Date = new Date();
     constructor(){      
-        // console.log(process.env);
         if(this.mongo_link === '')throw new Error('MongoURL not valid!');
         Mongoose.connect(this.mongo_link, {
             useNewUrlParser: true,
@@ -26,13 +26,17 @@ class Server{
             useFindAndModify: false,
             useUnifiedTopology: true
           })
-          .then(() => console.log('MonogoDB is now connected and ready for use \xF0\x9F\x98\x8F..'));
+          .then(() => {
+              const instance = `${this.date.getUTCDate()}-${this.date.getUTCMonth()}-${this.date.getUTCFullYear()} ${this.date.getUTCHours()}:${this.date.getUTCMinutes()}:${this.date.getUTCSeconds()}:${this.date.getUTCMilliseconds()}`;
+              console.log(`[${instance}] \x1b[32mMonogoDB is now connected and ready for use \xF0\x9F\x98\x8F.."\x1b[32m`);
+            });
           
         this.server.listen(
             this.port,
             () => {
+                const instance = `${this.date.getUTCDate()}-${this.date.getUTCMonth()}-${this.date.getUTCFullYear()} ${this.date.getUTCHours()}:${this.date.getUTCMinutes()}:${this.date.getUTCSeconds()}:${this.date.getUTCMilliseconds()}`;
                 console.log(
-                    `server listening to API calls on: ${`\u001b[34mhttp://app.unknown.node/api/v1/\u001b[34m`}`
+                    `[${instance}] server listening to API calls on: ${`\u001b[34mhttp://app.unknown.node/api/v1/\u001b[34m`}`
                 );
             }
         );
