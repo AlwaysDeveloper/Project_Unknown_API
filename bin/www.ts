@@ -9,7 +9,7 @@ import { helperfactory } from './../utils';
 import { App } from './../app';
 
 Dotenv.config({
-    path: Path.join(__dirname, '/.env')
+    path: Path.join(__dirname, '../.env')
 });
 
 class Server{
@@ -18,6 +18,7 @@ class Server{
     mongo_link: string = process.env.MONGODB_LOCAL ? process.env.MONGODB_LOCAL : '';
     server: Http.Server = Http.createServer(this.app);
     constructor(){      
+        // console.log(process.env);
         if(this.mongo_link === '')throw new Error('MongoURL not valid!');
         Mongoose.connect(this.mongo_link, {
             useNewUrlParser: true,
