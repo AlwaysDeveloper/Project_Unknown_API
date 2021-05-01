@@ -67,6 +67,25 @@ class RedisConnect{
             });
         });
     }
+
+    public updateSession(token: any, state: any){
+        return new Promise((resolve: Function, reject: Function) => {
+            this.redisClient.hmset(token,JSON.parse(state), (error: Error, val: any) => {
+                if(error){
+                    reject(error);
+                    return;
+                }else if(val === null){
+                    reject(new Error('no session to update'));
+                    return;
+                }
+                try{
+                    resolve(JSON.parse(val));
+                }catch(ex){
+                    reject(ex);
+                }
+            });
+        });
+    }
 }
 
 export default RedisConnect;
