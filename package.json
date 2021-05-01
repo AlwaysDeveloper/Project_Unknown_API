@@ -2,11 +2,11 @@
   "name": "backend_typescript",
   "version": "1.0.0",
   "description": "The backend in typescript",
-  "main": "index.js",
+  "main": "build/bin/www.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "start": "start cmd.exe /c .bat && build/bin/www.js",
+    "start": "start cmd.exe /c .bat && node build/bin/www.js",
     "dev": "start cmd.exe /c .bat && concurrently \"tsc -w\" \"nodemon build/bin/www.js",
     "trace": "node --trace-warnings"
   },
@@ -15,6 +15,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "connect-redis": "^5.1.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -27,9 +28,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.8",
     "morgan": "^1.10.0",
+    "mysql2": "^2.2.5",
     "nodemailer": "^6.4.17",
     "path": "^0.12.7",
     "redis": "^3.1.0",
+    "sequelize": "^6.6.2",
     "socket.io": "^3.0.4",
     "socket.io-client": "^3.1.0",
     "validator": "^13.5.2",
@@ -54,12 +57,14 @@
     "@types/nodemailer": "^6.4.0",
     "@types/redis": "^2.8.28",
     "@types/request": "^2.48.5",
+    "@types/sequelize": "^4.28.9",
     "@types/socket.io": "^2.1.12",
     "@types/socket.io-client": "^1.4.35",
     "@types/validator": "^13.1.2",
     "btoa": "^1.2.1",
     "concurrently": "^5.3.0",
     "nodemon": "^2.0.6",
+    "sequelize-cli-typescript": "^3.2.0-c",
     "typescript": "^4.1.3"
   }
 }

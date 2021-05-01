@@ -7,7 +7,7 @@ class AuthUtil {
        if(!process.env.JWT_SECRET || !process.env.JWT_EXPIRES_IN) throw new Error('Cannot sign the token!');
        const secret: string = process.env.JWT_SECRET;
        const expiresIn: string = process.env.JWT_EXPIRES_IN;
-       
+       console.log(id);
        const signed: JWT.Secret = JWT.sign( 
            {
                id,

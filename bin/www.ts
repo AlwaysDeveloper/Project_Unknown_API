@@ -9,7 +9,7 @@ import { helperfactory } from './../utils';
 import { App } from './../app';
 
 Dotenv.config({
-    path: Path.join(__dirname, '../.env')
+    path: Path.join(__dirname, './../../.env')
 });
 
 class Server{
