@@ -10,6 +10,7 @@ const xss_clean = require('xss-clean');
 
 import { user } from './routes';
 import { AppError } from './utils';
+import { mailer } from './services';
 
 class App {
     app: Express.Application = Express();
