@@ -4,9 +4,9 @@ import Http from 'http';
 import Mongoose from 'mongoose';
 import Path from 'path';
 
-import { helperfactory } from './../utils';
+import { helperfactory } from '../utils';
 // import { Env } from './environment';
-import { App } from './../app';
+import { App } from '../app';
 
 Dotenv.config({
     path: Path.join(__dirname, './../../.env')
@@ -18,7 +18,8 @@ class Server{
     mongo_link: string = process.env.MONGODB_LOCAL ? process.env.MONGODB_LOCAL : '';
     server: Http.Server = Http.createServer(this.app);
     date: Date = new Date();
-    constructor(){      
+    constructor(){
+        this.unexcepted();      
         if(this.mongo_link === '')throw new Error('MongoURL not valid!');
         Mongoose.connect(this.mongo_link, {
             useNewUrlParser: true,

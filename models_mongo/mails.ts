@@ -2,16 +2,16 @@ import Mongoose from 'mongoose';
 
 const mailschema: Mongoose.Schema = new Mongoose.Schema({
     to: [{
-        type: Mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User',
         required: [true, 'must have atleast one recipent']
     }],
     cc: [{
-        type: Mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User'
     }],
     bcc: [{
-        type: Mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User'
     }],
     subject:{

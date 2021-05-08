@@ -1,5 +1,6 @@
 import path from "path";
 import { Model, Sequelize, DataTypes, ModelCtor } from "sequelize";
+import { General } from "../interfaces";
 import { authUtil } from "../utils";
 
 var env = process.env.NODE_ENV || 'development';
@@ -102,13 +103,26 @@ class UserModel{
 
     getuser(where: object){
         return new Promise((reslove: Function, reject: Function) => {
-            this.sequelize.findOne({ where }).then((user: any) => {
+            this.sequelize.findOne({ where })
+            .then((user: any) => {
                 for(let i in user.dataValues){
                     if(user.dataValues[i] === null)user.dataValues[i] = undefined;
                 }
                 user.dataValues.password = user.dataValues.createdAt = user.dataValues.updatedAt = undefined;
-                reslove(user);
-            }).catch((error) => reject(error)); 
+                reslove(user.dataValues);
+            })
+            .catch((error) => reject(error)); 
+        });
+    }
+
+    updateUser(where: object, updates: General){
+        updates.updatedAt = new Date();
+        return new Promise((resolve: Function, reject: Function) => {
+            this.sequelize.update(updates, { returning: true, where })
+            .then((updates) => {
+                resolve( true );
+            })
+            .catch((error) => reject(error));
         });
     }
 

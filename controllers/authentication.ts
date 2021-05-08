@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
+import MailOptions from '../interfaces/MailOptions';
 import { User } from '../models';
-import { Email } from '../models_mongo';
+import { mailer } from '../services';
 import { helperfactory, authUtil, AppError } from './../utils';
 
 class Authentication{
@@ -53,31 +54,54 @@ class Authentication{
     forgotPassword: RequestHandler = helperfactory.catchAsync( 
         async (req: any, res: any, next: Function) => {
             const { email } = req.body;
-            User.getuser({email}).then((user: any) => {
+            const user = await User.getuser({email}).then((user: any) => {
                 if(!user || user=== null)return next(new AppError('User does not exist', 400));
-                const action_url = `http://app.unknown.local/resetpassword/${authUtil.signToken(user?.id, false)}`;
-                const mailOptions = {
+                const action_url = `http://app.unknown.local/resetpassword/${authUtil.getHashPassword(user?.id)}`;
+                const mailOptions: MailOptions = {
                     to: [user?.id],
                     subject: 'Reset Password',
                     template: 'reset_password',
                     action_url,
-                    priority: 3
+                    bcc: undefined,
+                    cc: undefined
                 }
-            }).catch((error) => { next(new AppError(error.message, 401)); });
-            const user = await User.findOne({email}).select(['-__v','-photo', '-dob', '-address', '-usertype', '-department']);
-            if(!user || user=== null)return next(new AppError('User does not exist', 400));
-            const action_url = `http://app.unknown.local/resetpassword/${authUtil.signToken(user?._id, false)}`
-            const mailOptions = {
-                to: [user?._id],
-                subject: 'Reset Password',
-                template: 'reset_password',
-                action_url,
-                priority: 3
-            };
-            Email.create(mailOptions);
-            res.status(200).json({
-                status: 'email send'
-            });
+                mailer.send(mailOptions);
+                // Email.create(mailOptions).then(() => );
+                res.status(200).json({
+                    status: 'email send'
+                });
+            }).catch((error) => { next(new AppError(error.message, 401)); });    
+        }
+    );
+
+    resetPassword: RequestHandler = helperfactory.catchAsync(
+        async (req: any, res: any, next: Function) => {
+            const { token } = req.params;
+
+            if(!req.body.confirmPassword || (req.body.confirmPassword !== req.body.password)) return next( new AppError("password and confrim-password does not match", 401) );
+            else if(!req.body.password.match('\^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8}')) return next( new AppError("password not secure", 401) );
+
+            const { password, isLogin } = req.body;
+
+            authUtil.decodeToken(token)
+            .then(async (decoded) => {
+                User.updateUser({ id: decoded.id, isActive: true }, { password: await authUtil.getHashPassword(password) })
+                .then( (updated) => {
+                    if(!isLogin){
+                        res.status(200).json({status: 'success'});
+                    }
+                    User.getuser({id: decoded.id})
+                    .then((user: any) => {
+                        const { email } = user;
+                        req.body.id = email;
+                        req.body.password = password;
+                        next();
+                    })
+                    .catch( (error: Error) => { throw new Error(error.message) } );
+                } )
+                .catch( error => { throw new Error(error) } );
+            })
+            .catch( error => { throw new Error(error) } ); 
         }
     );
 }
