@@ -1,5 +1,6 @@
 'use strict';
 
+import ProductModel from "./product";
 import UserModel from "./user";
 
 var fs        = require('fs');
@@ -20,4 +21,5 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 const User = new UserModel(db.sequelize);
-export { db , User}
+const Product = new ProductModel(db.sequelize);
+export { db , User, Product}

@@ -1,5 +1,5 @@
 import path from "path";
-import { Model, Sequelize, DataTypes, ModelCtor } from "sequelize";
+import { Model, Sequelize, DataTypes, ModelCtor, ModelAttributes } from "sequelize";
 import { General } from "../interfaces";
 import { authUtil } from "../utils";
 
@@ -19,7 +19,7 @@ class UserModel{
 
     public sequelize!: ModelCtor<Model>;
 
-    protected schema: any = {
+    protected schema: ModelAttributes = {
         id: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -87,7 +87,7 @@ class UserModel{
     }
 
     async create(){
-        const data = {
+        return this.sequelize.create({
             id: this.createId(),
             fullname: this.fullname,
             email: this.email,
@@ -97,8 +97,7 @@ class UserModel{
             isActive: this.isActive,
             createdAt: new Date(),
             updatedAt: new Date()
-        }
-        return this.sequelize.create(data);
+        });
     }
 
     getuser(where: object){
