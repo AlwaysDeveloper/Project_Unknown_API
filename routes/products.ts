@@ -1,11 +1,8 @@
 import { Router } from "express";
 import { ProductsController } from "../controllers";
 
-class Route{
-    router: Router = Router();
-    constructor(){
-        this.router.get('/', ProductsController.getAllProducts);
-    }
-}
+const router: Router = Router();
 
-export {Route as ProductsRoute}
+router.get('/', ProductsController.getAllProducts);
+
+export {router as ProductsRouter}

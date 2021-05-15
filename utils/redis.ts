@@ -1,6 +1,7 @@
 import Session from 'express-session';
 import Redis from 'redis';
 import ConnectRedis from 'connect-redis';
+import { authUtil } from '.';
 
 const RedisStore = ConnectRedis(Session);
 
@@ -13,10 +14,11 @@ class RedisConnect{
         saveUninitialized: true,
         cookie: { secure: false },
         store: new RedisStore({
-            host: 'localhost',
-            port: 6379,
+            host: process.env.REDIS_HOST,
+            port: parseInt(process.env.REDIS_PORT? process.env.REDIS_PORT : '6379'),
             client: this.redisClient,
-            ttl: 86400
+            ttl: parseInt(process.env.REDIS_TTL ? process.env.REDIS_TTL : '86400'),
+            pass: process.env.REDIS_PASS
         })
     });
 

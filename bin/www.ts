@@ -4,7 +4,7 @@ import Http from 'http';
 import Mongoose from 'mongoose';
 import Path from 'path';
 
-import { helperfactory } from './../utils';
+import { authUtil, helperfactory } from './../utils';
 // import { Env } from './environment';
 import { App } from './../app';
 
@@ -18,7 +18,8 @@ class Server{
     mongo_link: string = process.env.MONGODB_LOCAL ? process.env.MONGODB_LOCAL : '';
     server: Http.Server = Http.createServer(this.app);
     date: Date = new Date();
-    constructor(){      
+    constructor(){   
+        this.setenv();   
         if(this.mongo_link === '')throw new Error('MongoURL not valid!');
         Mongoose.connect(this.mongo_link, {
             useNewUrlParser: true,
@@ -45,6 +46,13 @@ class Server{
     unexcepted(){
         process.on('uncaughtException', error => helperfactory.serverCrash(error));
         process.on('unhandledRejection', error => helperfactory.serverRejection(error, this.server));
+    }
+
+    async setenv(){
+        process.env.REDIS_PASS = process.env.REDIS_PASS ? await authUtil.getHashPassword(process.env.REDIS_PASS) : '';
+        process.env.REDIS_HOST = process.env.REDIS_HOST ? process.env.REDIS_HOST : 'localhost';
+        process.env.REDIS_PORT = process.env.REDIS_PORT ? process.env.REDIS_PORT : '6379';
+        process.env.REDIS_TTL = process.env.REDIS_TTL ? process.env.REDIS_TTL : '86400';
     }
 }
 

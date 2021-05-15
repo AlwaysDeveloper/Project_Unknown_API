@@ -8,8 +8,8 @@ import MongoSanitize from 'express-mongo-sanitize';
 
 const xss_clean = require('xss-clean');
 
-import { user } from './routes';
 import { AppError } from './utils';
+import router from './routes';
 
 class App {
     app: Express.Application = Express();
@@ -35,9 +35,7 @@ class App {
     }
 
     setRoutes(){
-        this.app.use(Express.static(`${__dirname}/web`));
-        this.app.use('/api/v1/users', user);
-        this.app.use('*', (req: any, res: any, next: Function) => next(new AppError(`Can't able to find ${req.originalUrl} on the server!`, 404)));
+        this.app.use('/api/v1', router);
     }
 }
 
