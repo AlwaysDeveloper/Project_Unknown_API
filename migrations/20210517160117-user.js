@@ -1,28 +1,26 @@
 'use strict';
 
-import { QueryInterface, Sequelize, DataTypes } from "sequelize";
-
 module.exports = {
-  up: async (queryInterface: QueryInterface, Sequelize: Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
     /**
      * Add altering commands here.
      *
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    const Schema = queryInterface.createTable('Users', {
+    return queryInterface.createTable('User', {
       id:{
-        type: DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
         primaryKey: true
       },
       fullname:{
-        type: DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
       email:{
-        type: DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
         validate: {
@@ -30,11 +28,11 @@ module.exports = {
         }
       },
       password:{
-        type: DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
       phone:{
-        type: DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING,
         allowNull: true,
         unique: true,
         validate: {
@@ -42,38 +40,37 @@ module.exports = {
         }
       },
       accountType:{
-        type: DataTypes.ENUM,
+        type: Sequelize.DataTypes.ENUM,
         values: ['root', 'admin', 'user'],
         defaultValue: 'user'
       },
       dob:{
-        type: DataTypes.DATE,
+        type: Sequelize.DataTypes.DATE,
         allowNull: true
       },
       isActive:{
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.DataTypes.BOOLEAN,
         defaultValue: true,
         allowNull: false
       },
       createdAt:{
-        type: DataTypes.DATE,
+        type: Sequelize.DataTypes.DATE,
         defaultValue: new Date()
       },
       updatedAt:{
-          type: DataTypes.DATE,
+          type: Sequelize.DataTypes.DATE,
           defaultValue: new Date()
       }
     });
-    return Schema;
   },
 
-  down: async (queryInterface: QueryInterface, Sequelize: Sequelize) => {
+  down: async (queryInterface, Sequelize) => {
     /**
      * Add reverting commands here.
      *
      * Example:
      * await queryInterface.dropTable('users');
      */
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('User');
   }
 };

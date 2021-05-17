@@ -1,7 +1,6 @@
 import Session from 'express-session';
 import Redis from 'redis';
 import ConnectRedis from 'connect-redis';
-import { authUtil } from '.';
 
 const RedisStore = ConnectRedis(Session);
 
