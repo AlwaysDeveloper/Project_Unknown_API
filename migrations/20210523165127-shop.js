@@ -8,50 +8,29 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    return queryInterface.createTable('User', {
-      id:{
+    return queryInterface.createTable('Shop', {
+      id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
         primaryKey: true
       },
-      fullname:{
+      owner: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      email:{
+      address: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
-        validate: {
-          isEmail: true
-        }
+        unique: true
       },
-      password:{
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      phone:{
+      gst: {
         type: Sequelize.STRING,
         allowNull: true,
-        unique: true,
-        validate: {
-          is: '\^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$'
-        }
       },
-      accountType:{
-        type: Sequelize.ENUM,
-        values: ['root', 'admin', 'user'],
-        defaultValue: 'user'
-      },
-      dob:{
-        type: Sequelize.DATE,
-        allowNull: true
-      },
-      isActive:{
+      servingStatus: {
         type: Sequelize.BOOLEAN,
-        defaultValue: true,
-        allowNull: false
+        allowNull: false,
       },
       createdAt:{
         type: Sequelize.DATE,
@@ -61,7 +40,7 @@ module.exports = {
           type: Sequelize.DATE,
           defaultValue: new Date()
       }
-    });
+    })
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -71,6 +50,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    return queryInterface.dropTable('User');
+     return queryInterface.dropTable('Shop');
   }
 };

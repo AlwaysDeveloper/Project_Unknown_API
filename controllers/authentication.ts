@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { User } from '../models';
+import { db } from '../models';
 import { Email } from '../models_mongo';
 import { helperfactory, authUtil, AppError } from './../utils';
 
@@ -8,7 +8,8 @@ class Authentication{
         async (req: any, res: any, next: Function) => {
             const { id, password } = req.body;
             if(!id || !password) return next(new AppError('id or password incorrect', 401));
-            User.getuser({email: id}).then(async (user: any) => {
+            const { user } = db;
+            user.getuser({email: id}).then(async (user: any) => {
                 if(!user) return next(new AppError('id or password incorrect!', 401));
                 if(user.password && !await authUtil.passwordCheck(password, user.password)) return next(new AppError('id or password incorrect!', 401));
                 const token = authUtil.signToken(user.id);
@@ -31,8 +32,9 @@ class Authentication{
         async (req: any, res: any, next: Function) => {
             if(!req.body.confirmPassword || (req.body.confirmPassword !== req.body.password)) return next( new AppError("password and confrim-password does not match", 401) );
             else if(!req.body.password.match('\^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8}')) return next( new AppError("password not secure", 401) );
-            User.fill(req.body);
-            User.create().then(
+            const { user } = db;
+            user.fill(req.body);
+            user.create().then(
                 (user: any) => {
                     user = user.dataValues;
                     delete user.password;
@@ -53,7 +55,8 @@ class Authentication{
     forgotPassword: RequestHandler = helperfactory.catchAsync( 
         async (req: any, res: any, next: Function) => {
             const { email } = req.body;
-            User.getuser({email}).then((user: any) => {
+            const { user } = db;
+            user.getuser({email}).then((user: any) => {
                 if(!user || user=== null)return next(new AppError('User does not exist', 400));
                 const action_url = `http://app.unknown.local/resetpassword/${authUtil.signToken(user?.id, false)}`;
                 const mailOptions = {
@@ -63,21 +66,11 @@ class Authentication{
                     action_url,
                     priority: 3
                 }
-            }).catch((error) => { next(new AppError(error.message, 401)); });
-            const user = await User.findOne({email}).select(['-__v','-photo', '-dob', '-address', '-usertype', '-department']);
-            if(!user || user=== null)return next(new AppError('User does not exist', 400));
-            const action_url = `http://app.unknown.local/resetpassword/${authUtil.signToken(user?._id, false)}`
-            const mailOptions = {
-                to: [user?._id],
-                subject: 'Reset Password',
-                template: 'reset_password',
-                action_url,
-                priority: 3
-            };
-            Email.create(mailOptions);
-            res.status(200).json({
-                status: 'email send'
-            });
+                Email.create(mailOptions);
+                res.status(200).json({
+                    status: 'email send'
+                });
+            }).catch((error: { message: string; }) => { next(new AppError(error.message, 401)); });
         }
     );
 }

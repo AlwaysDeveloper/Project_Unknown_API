@@ -1,6 +1,7 @@
 'use strict';
 
-import UserModel from "./user";
+import Shop from "./shop";
+import User from "./user";
 
 var fs        = require('fs');
 var path      = require('path');
@@ -19,5 +20,7 @@ if (config.use_env_variable) {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-const User = new UserModel(db.sequelize);
-export { db , User}
+db.user  = User(sequelize);
+db.shop = Shop(sequelize);
+
+export { db }
