@@ -1,4 +1,4 @@
-class HelperFactory{
+export default class HelperFactory{
     serverCrash(error: Error){
         console.log('Server is going down unexpectedly 😑..');
         console.log(error.name, error.message);
@@ -19,5 +19,3 @@ class HelperFactory{
         }
     }
 }
-
-export default HelperFactory;

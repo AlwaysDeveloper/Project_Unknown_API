@@ -10,8 +10,9 @@ const xss_clean = require('xss-clean');
 
 import { AppError } from './utils';
 import router from './routes';
+import { db } from './models';
 
-class App {
+export default class App {
     app: Express.Application = Express();
     constructor() {
         this.app.enable('trust proxy');
@@ -35,8 +36,9 @@ class App {
     }
 
     setRoutes(){
-        this.app.use('/api/v1', router);
+        this.app.use('/api/v1', (req: any, res: any, next: Function) => {
+            req['db'] = db;
+            next();
+        }, router);
     }
 }
-
-export { App as App }

@@ -6,7 +6,7 @@ import Path from 'path';
 
 import { authUtil, helperfactory } from './../utils';
 // import { Env } from './environment';
-import { App } from './../app';
+import App from './../app';
 
 Dotenv.config({
     path: Path.join(__dirname, './../../.env')

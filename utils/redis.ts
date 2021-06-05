@@ -4,7 +4,7 @@ import ConnectRedis from 'connect-redis';
 
 const RedisStore = ConnectRedis(Session);
 
-class RedisConnect{
+export default class RedisConnect{
     private redisClient: any = Redis.createClient();
     public session: any = Session({
         secret: process.env.REDIS_SECRET ? process.env.REDIS_SECRET : "default",
@@ -88,5 +88,3 @@ class RedisConnect{
         });
     }
 }
-
-export default RedisConnect;

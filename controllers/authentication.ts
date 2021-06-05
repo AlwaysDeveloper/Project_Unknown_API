@@ -1,14 +1,13 @@
 import { RequestHandler } from 'express';
-import { db } from '../models';
-import { Email } from '../models_mongo';
+import { Email } from './../models_mongo';
 import { helperfactory, authUtil, AppError } from './../utils';
 
-class Authentication{
+export default class Authentication{
     login: RequestHandler = helperfactory.catchAsync(
         async (req: any, res: any, next: Function) => {
             const { id, password } = req.body;
             if(!id || !password) return next(new AppError('id or password incorrect', 401));
-            const { user } = db;
+            const { user } = req.db;
             user.getuser({email: id}).then(async (user: any) => {
                 if(!user) return next(new AppError('id or password incorrect!', 401));
                 if(user.password && !await authUtil.passwordCheck(password, user.password)) return next(new AppError('id or password incorrect!', 401));
@@ -32,7 +31,7 @@ class Authentication{
         async (req: any, res: any, next: Function) => {
             if(!req.body.confirmPassword || (req.body.confirmPassword !== req.body.password)) return next( new AppError("password and confrim-password does not match", 401) );
             else if(!req.body.password.match('\^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8}')) return next( new AppError("password not secure", 401) );
-            const { user } = db;
+            const { user } = req.db;
             user.fill(req.body);
             user.create().then(
                 (user: any) => {
@@ -55,7 +54,7 @@ class Authentication{
     forgotPassword: RequestHandler = helperfactory.catchAsync( 
         async (req: any, res: any, next: Function) => {
             const { email } = req.body;
-            const { user } = db;
+            const { user } = req.db;
             user.getuser({email}).then((user: any) => {
                 if(!user || user=== null)return next(new AppError('User does not exist', 400));
                 const action_url = `http://app.unknown.local/resetpassword/${authUtil.signToken(user?.id, false)}`;
@@ -74,5 +73,3 @@ class Authentication{
         }
     );
 }
-
-export default Authentication;
