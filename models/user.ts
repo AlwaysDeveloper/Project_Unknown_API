@@ -34,7 +34,7 @@ const User = (sequelize: Sequelize) => {
             allowNull: true,
             unique: true,
             validate: {
-                is: '\^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$'
+                is: /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/
             }
         },
         accountType: {
@@ -51,6 +51,11 @@ const User = (sequelize: Sequelize) => {
             defaultValue: true,
             allowNull: false
         },
+        gender: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "null"
+        },
         createdAt:{
             type: DataTypes.DATE,
             defaultValue: new Date()
@@ -59,6 +64,21 @@ const User = (sequelize: Sequelize) => {
             type: DataTypes.DATE,
             defaultValue: new Date()
         }
+    }, {
+        tableName: 'user',
+        timestamps: false,
+        indexes: [
+            {
+                name: "PRIMARY",
+                unique: true,
+                using: "BTREE",
+                fields: [
+                    {
+                        name: "id"
+                    }
+                ]
+            }
+        ]
     });
 };
 
