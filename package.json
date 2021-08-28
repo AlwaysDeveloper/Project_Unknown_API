@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "start": "start cmd.exe /c .bat && node build/bin/www.js",
+    "start": "node build/bin/www.js",
     "build": "tsc --build",
     "dev": "concurrently \"tsc -w\" \"nodemon build/bin/www.js",
     "trace": "node --trace-warnings"
