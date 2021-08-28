@@ -1,1 +1,1 @@
-cd redis && redis-server.exe
+start cmd /k && cd redis && redis-server.exe

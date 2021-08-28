@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "start": "start cmd.exe /c .bat && node build/bin/www.js",
     "build": "tsc --build",
-    "dev": "start cmd.exe /c .bat && concurrently \"tsc -w\" \"nodemon build/bin/www.js",
+    "dev": "concurrently \"tsc -w\" \"nodemon build/bin/www.js",
     "trace": "node --trace-warnings"
   },
   "author": "",
